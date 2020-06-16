@@ -28,6 +28,6 @@ cat $DATA_DIR/nodes.transactions.client-sourcing.csv >> $OUTPUT_DIR/transactions
 perl -MList::Util=shuffle -e 'print shuffle(<STDIN>);' < $DATA_DIR/nodes.transactions.company-sourcing.csv >> $OUTPUT_DIR/transactions.csv
 perl -MList::Util=shuffle -e 'print shuffle(<STDIN>);' < $DATA_DIR/nodes.transactions.patterns.time.csv >> $OUTPUT_DIR/transactions.csv
 
-cp $DATA_DIR/nodes.atms.csv $OUTPUT_DIR/atms.csv
+# cp $DATA_DIR/nodes.atms.csv $OUTPUT_DIR/atms.csv
 cp $DATA_DIR/nodes.clients.csv $OUTPUT_DIR/clients.csv
 cp $DATA_DIR/nodes.companies.csv $OUTPUT_DIR/companies.csv

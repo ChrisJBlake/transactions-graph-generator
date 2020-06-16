@@ -66,7 +66,7 @@ def main():
     ### ### ###
 
     probs = [float(x) for x in args.probs.split(",")]
-    steps = set(x for x in args.steps.split(","))
+    steps = set(args.steps.split(","))
     batchSize = getattr(args, "batch_size")
 
     log("Steps to execute: " + str(steps))
@@ -76,8 +76,7 @@ def main():
         log()
         log("------------##############------------")
         log("Generating nodes")
-        generateNodes(files, counts, batchSize)
-
+        generateNodes(files, counts, batchSize, counts['client'])
 
     # Edges generation processes
     if "edges" in steps:

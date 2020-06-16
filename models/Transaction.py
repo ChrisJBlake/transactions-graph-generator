@@ -1,6 +1,5 @@
 from mimesis import Datetime, Business
 import random
-from math import ceil
 from uuid import uuid4
 from .Node import Node
 

@@ -9,7 +9,7 @@ clientHeaders = ['id']
 companyHeaders = ['id']
 #atmHeaders = ['id', 'latitude', 'longitude']
 
-def __generateModel(count, file, header, Model, modelname, batchSize, verbose=True):
+def __generateModel(count, file, header, Model, modelname, batchSize, offset: int, verbose=True):
 	try:
 		os.remove(file)
 	except OSError:
@@ -20,7 +20,7 @@ def __generateModel(count, file, header, Model, modelname, batchSize, verbose=Tr
 
 		file.write('|'.join(header) + '\n')
 		for i in range(0, count):
-			c = Model(i)
+			c = Model(i, offset)
 			batch.append(c.toRow(header))
 
 			if verbose and i % batchSize == 0:
@@ -33,7 +33,7 @@ def __generateModel(count, file, header, Model, modelname, batchSize, verbose=Tr
 		writeBatch(file, batch)
 		log('TOTAL ' + modelname + ' of ' + str(count) + ' are generated')
 
-def generateNodes(files, counts, batchSize):
+def generateNodes(files, counts, batchSize, numClients: int):
 	clientsProcess = mp.Process(target=__generateModel, args=(
 		counts["client"],
 		files["client"],
@@ -41,7 +41,7 @@ def generateNodes(files, counts, batchSize):
 		Client,
 		'Client',
 		batchSize,
-		True
+		0  # Clients are generated with no offset
 	))
 	companiesProcess = mp.Process(target=__generateModel, args=(
 		counts["company"],
@@ -50,7 +50,7 @@ def generateNodes(files, counts, batchSize):
 		Company,
 		'Company',
 		batchSize,
-		True
+		numClients  # Orgs/companies are generated after clients, and are numbered as such
 	))
 
 	clientsProcess.start()

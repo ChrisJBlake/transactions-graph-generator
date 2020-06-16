@@ -7,7 +7,7 @@ A big graph generator for transactions graph. As output you'll get:
 * a csv with transactions
 * 3 csv, one for clients, one for companies, one for ATMs, containing information about nodes of the graph
 
-Also generates some patterns inside the graph (FLow, Circle, Time patterns)
+Also generates some patterns inside the graph (Flow, Circle, Time patterns)
 
 Theoretically supports generation of any sized graph (kind of optimized, but not tested on graph more than 100000 nodes and > 10^9 transactions)
 
@@ -19,17 +19,17 @@ Theoretically supports generation of any sized graph (kind of optimized, but not
 
 ## Config-less
 ```
-pipenv run python generateGraph.py 100
+pipenv run python generateGraph.py 100 10
 ```
-Will generate a graph with 100 clients, 1 ATM and 2 companies.  Number of transactions is following a given distribution (look code to know more)
+Will generate a graph with 100 clients and 10 companies.  Number of transactions is following a given distribution (look code to know more)
 
 ## Config-full
 All configurations are described in `generateGraph.py` file
 ```
-pipenv run python generateGraph.py --data=./myOwnFolder --probs=0.01,0.001,0.03,0.005 --steps=nodes,edges,transactions,patterns --batch-size=5000 10000
+pipenv run python generateGraph.py --data=./myOwnFolder --probs=0.01,0.001,0.005 --steps=nodes,edges,transactions,patterns --batch-size=5000 50000 10000
 ```
 * `--data` : folder to store generated data
-* `--probs` : list of connection creation probabilities. Format: client-client,client-company,client-atm,company-client
+* `--probs` : list of connection creation probabilities. Format: client-client,client-company,company-client
 * `--steps` : Steps to do. possible values (comma - separated): nodes, edges, transactions, patterns. Should be ordered (transaction swill not be generated before edges, for example)
 * `--batch-size` : While generating, data is written to disk by batches of given size. An element in a batch is a line in CSV file. Also, batch size controls frequency of logs. More batch size is more memory you need (will be used to store generated data) but should work faster (in theory, not in practice :))
 
@@ -44,30 +44,9 @@ There is a number of transformation scripts that transform generated data into s
 # Data and Patterns
 ## Client
 * id
-* first_name
-* last_name
-* age
-* email
-* occupation
-* political_views
-* nationality
-* university
-* academic_degree
-* address
-* postal_code
-* country
-* city
 
 ## Company
 * id
-* type
-* name
-* country
-
-## ATM
-* id
-* latitude
-* longitude
 
 ## Transaction
 * id
