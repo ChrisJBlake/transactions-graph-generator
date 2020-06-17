@@ -39,6 +39,13 @@ def main():
         action="store",
         default=100000,
     )
+    parser.add_argument(
+        "--pattern-count",
+        help="Number of money laundering patterns to generate",
+        type=int,
+        action="store",
+        default=100
+    )
 
     args = parser.parse_args()
     ### ### ###
@@ -68,6 +75,7 @@ def main():
     probs = [float(x) for x in args.probs.split(",")]
     steps = set(args.steps.split(","))
     batchSize = getattr(args, "batch_size")
+    patternCount = getattr(args, "pattern_count")
 
     log("Steps to execute: " + str(steps))
 
@@ -97,7 +105,7 @@ def main():
         log()
         log('------------##############------------')
         log('Generating patterns')
-        generatePatterns(files, counts, batchSize)
+        generatePatterns(files, patternCount, batchSize)
 
 
 if __name__ == "__main__":

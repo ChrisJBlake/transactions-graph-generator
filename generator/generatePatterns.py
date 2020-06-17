@@ -2,13 +2,13 @@ import csv
 import multiprocessing as mp
 import os
 from math import ceil
-from random import random
+import random
 from .utils import writeBatch, log
 from models.Patterns import generateFlowPattern, generateCircularPattern, generateTimePattern
 
-transactionHeaders = ['id', 'source', 'target', 'date', 'time', 'amount', 'currency']
+transactionHeaders = ['source', 'target', 'date', 'time', 'amount', 'currency']
 
-def __generatePatterns(nodes, counts, transactionsFile, batchSize, patternsGenerator, label):
+def __generatePatterns(nodes, counts, transactionsFile, batchSize, patternsGenerator, label, numPatterns: int):
 	try:
 		os.remove(transactionsFile)
 	except OSError:
@@ -17,8 +17,7 @@ def __generatePatterns(nodes, counts, transactionsFile, batchSize, patternsGener
 	totalNumberOfPatterns = 0
 	totalNumberOfTransactions = 0
 
-	numberOfPatterns = ceil(0.1 * random() * counts['client'])
-	# numberOfPatterns = 1
+	numberOfPatterns = numPatterns
 
 	log(label + ': Number of patterns to be generated: ' + str(numberOfPatterns))
 
@@ -43,7 +42,7 @@ def __generatePatterns(nodes, counts, transactionsFile, batchSize, patternsGener
 		log(label + ': TOTAL Generated ' + str(totalNumberOfPatterns) + ' patterns with ' + str(totalNumberOfTransactions) + ' transactions in total')
 
 
-def generatePatterns(files, counts, batchSize):
+def generatePatterns(files, counts: int, batchSize):
 	print("Reading nodes in memory")
 	nodes = []
 
@@ -61,6 +60,12 @@ def generatePatterns(files, counts, batchSize):
 		for row in reader:
 			nodes.append(row[0])
 
+	# Determine how many of each pattern we're going to make
+	numFlow = random.randint(0, counts)
+	counts -= numFlow
+	numCircular = random.randint(0, counts)
+	counts -= numCircular
+	numTime = counts  # Have the remainder of patterns be Time
 
 	flow = mp.Process(target=__generatePatterns, args=(
 		nodes,
@@ -68,7 +73,8 @@ def generatePatterns(files, counts, batchSize):
 		files['flow-pattern-transactions'],
 		batchSize,
 		generateFlowPattern,
-		'Flow patterns'
+		'Flow patterns',
+		numFlow
 	))
 
 	circular = mp.Process(target=__generatePatterns, args=(
@@ -77,7 +83,8 @@ def generatePatterns(files, counts, batchSize):
 		files['circular-pattern-transactions'],
 		batchSize,
 		generateCircularPattern,
-		'Circular patterns'
+		'Circular patterns',
+		numCircular
 	))
 
 	time = mp.Process(target=__generatePatterns, args=(
@@ -86,7 +93,8 @@ def generatePatterns(files, counts, batchSize):
 		files['time-pattern-transactions'],
 		batchSize,
 		generateTimePattern,
-		'Time patterns'
+		'Time patterns',
+		numTime
 	))
 
 	flow.start()

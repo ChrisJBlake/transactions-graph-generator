@@ -2,7 +2,7 @@ from .Transaction import Transaction
 from random import randint, random
 from datetime import timedelta
 
-transactionsHeader = ['id', 'source', 'target', 'date', 'time', 'amount', 'currency']
+transactionsHeader = ['source', 'target', 'date', 'time', 'amount', 'currency']
 
 def int2str(val):
   if val < 10: return '0' + str(val)
