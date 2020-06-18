@@ -49,7 +49,6 @@ There is a number of transformation scripts that transform generated data into s
 * id
 
 ## Transaction
-* id
 * source (points by ID to other node types)
 * target (points by ID to other node types)
 * date
